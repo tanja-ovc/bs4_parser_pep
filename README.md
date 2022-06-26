@@ -1,7 +1,7 @@
-# Парсер официального сайта PEP (Python Enhancement Proposals) и
-# официального сайта с документацией для Python 3
+# Парсер официального сайта PEP (Python Enhancement Proposals) и официального сайта с документацией для Python 3
 
 https://peps.python.org/
+
 https://docs.python.org/3/
 
 ### Парсер позволяет
