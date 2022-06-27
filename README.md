@@ -35,15 +35,19 @@ optional arguments:
 
 ### Примеры команд
 Выгрузка файла с нововведениями в последней версии Python (с предварительной очисткой кэша):
+
 ```python main.py whats-new -c --output file```
 
 Вывод в терминал таблицы со статусами версий Python:
+
 ```python main.py latest-versions -o pretty```
 
 Выгрузка архива с актуальной документацией Python:
+
 ```python main.py download```
 
 Стандартный вывод в терминал таблицы с количеством PEP в каждом статусе:
+
 ```python main.py pep```
 
 ### Логирование
