@@ -2,7 +2,7 @@ import logging
 import re
 
 from bs4 import BeautifulSoup
-from exceptions import ParserFindTagException
+from exceptions import ParserFindTagException, PreviewStatusNotFound
 from requests import RequestException
 from urllib.parse import urljoin
 
@@ -41,12 +41,19 @@ def mapping_and_counting_statuses(session, table_rows, links_to_pep_pages):
             'Superseded': 0,
             'Withdrawn': 0,
             'Draft': 0,
-            'unexpected_status': 0
         }
 
     for row, pep_a_tag in zip(table_rows, links_to_pep_pages):
         preview_status_tag = row.find_all('td')[0]
         preview_status = preview_status_tag.string[1:]
+
+        if preview_status not in EXPECTED_STATUS.keys():
+            error_msg = (
+                f'Табличный статус PEP "{preview_status}" не опознан, '
+                'его сравнение со статусом со страницы PEP невозможно.'
+            )
+            logging.error(error_msg)
+            raise PreviewStatusNotFound(error_msg)
 
         pep_single_page_href = pep_a_tag['href']
         pep_link = urljoin(PEPS_URL, pep_single_page_href)
@@ -72,10 +79,7 @@ def mapping_and_counting_statuses(session, table_rows, links_to_pep_pages):
             status_tag = pre_status_tag.find_next_sibling()
         status = status_tag.string
 
-        if status in count_statuses.keys():
-            count_statuses[status] += 1
-        else:
-            count_statuses['unexpected_status'] += 1
+        count_statuses[status] = count_statuses.get(status, 0) + 1
 
         if status not in EXPECTED_STATUS[preview_status]:
             pep_title = pep_a_tag['title']
